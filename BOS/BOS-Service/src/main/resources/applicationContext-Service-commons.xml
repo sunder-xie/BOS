@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context.xsd
+	http://www.springframework.org/schema/aop
+	http://www.springframework.org/schema/aop/spring-aop.xsd
+	http://www.springframework.org/schema/tx 
+	http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+	<!-- 引入配置文件 -->
+	<context:property-placeholder location="classpath:config.properties"/>
+	<!-- 开启注解 -->
+	<context:annotation-config/>
+	<!-- <context:component-scan base-package="cn.it.bos"></context:component-scan> -->
+	<!-- 配置数据源 -->
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+		<property name="driverClass" value="${jdbc.driver}"/>
+		<property name="jdbcUrl" value="${jdbc.url}"/>
+		<property name="user" value="${jdbc.user}"/>
+		<property name="password" value="${jdbc.password}"/>
+	</bean>
+	
+	
+	<!-- 整合hibernate -->
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"/>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">${jdbc.dialect}</prop>
+				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.format_sql">true</prop>
+				<prop key="hibernate.hbm2ddl.auto">update</prop>
+				<prop key="hibernate.connection.autocommit">false</prop>
+				<prop key="hibernate.search.default.directory_provider">filesystem</prop>
+				<prop key="hibernate.search.default.indexBase">/Users/xieshengrong/home/Workspaces/index</prop>
+			</props>
+		</property>
+		<property name="mappingDirectoryLocations">
+			<list>
+				<value>classpath:/cn/it/bos/domain</value>
+			</list>
+		</property>
+	</bean>
+	
+	<!-- 注解配置事务   第三步:在Service上使用注解
+	-->
+	<!-- <tx:annotation-driven transaction-manager="transactionManager"/> -->
+	
+	<!--  使用xml方式进行配置-->
+	<!--  配置事务管理器-->
+	<bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	<!-- 配置事务 -->
+	<!-- 配置事务通知 -->
+	<tx:advice  id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<!-- 增删改方法 -->
+			<tx:method name="add*" isolation="DEFAULT" propagation="REQUIRED" read-only="false"/>
+			<tx:method name="edit*" isolation="DEFAULT" propagation="REQUIRED" read-only="false"/>
+			<tx:method name="save*" isolation="DEFAULT" propagation="REQUIRED" read-only="false"/>
+			<tx:method name="delete*" isolation="DEFAULT" propagation="REQUIRED" read-only="false"/>
+			<tx:method name="update*" isolation="DEFAULT" propagation="REQUIRED" read-only="false"/>
+			
+			<!-- 配置查询方法 --><!-- 问题，read-only设置为true时候，不能利用快照性质来修改数据 -->
+			<tx:method name="get*" isolation="DEFAULT" propagation="REQUIRED" read-only="true"/>
+			<tx:method name="find*" isolation="DEFAULT" propagation="REQUIRED" read-only="true"/>
+			<tx:method name="list*" isolation="DEFAULT" propagation="REQUIRED" read-only="true"/>
+		</tx:attributes>
+	</tx:advice>
+	
+	<!-- 配置AOP切面 -->
+	<aop:config>
+		<!-- 定义需要通知的切点 -->
+		<aop:pointcut expression="execution(* cn.it.bos.service.impl..*(..))" id="mypointcut"/>
+		
+		<!-- 定义通知的切面 -->
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="mypointcut"/>
+	</aop:config>
+	
+	
+	
+	
+	
+</beans>

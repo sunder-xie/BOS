@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context.xsd
+	http://www.springframework.org/schema/aop
+	http://www.springframework.org/schema/aop/spring-aop.xsd
+	http://www.springframework.org/schema/tx 
+	http://www.springframework.org/schema/tx/spring-tx.xsd">
+	<!-- 基础设置 -->
+	<!-- 一定要配置scope，action默认是单利 -->
+	<bean id="loginAction" class="cn.it.bos.web.action.user.LoginAction" scope="prototype"/>
+	<bean id="userAction" class="cn.it.bos.web.action.user.UserAction" scope="prototype"/>
+	<bean id="standardAction" class="cn.it.bos.web.action.bc.StandardAction" scope="prototype"></bean>
+	<bean id="staffAction" class="cn.it.bos.web.action.bc.StaffAction" scope="prototype"></bean>
+	<bean id="regionAction" class="cn.it.bos.web.action.bc.RegionAction" scope="prototype"></bean>
+	<bean id="subareaAction" class="cn.it.bos.web.action.bc.SubareaAction" scope="prototype"></bean>
+	<bean id="decidedZoneAction" class="cn.it.bos.web.action.bc.DecidedZoneAction" scope="prototype"></bean>
+	
+	<!-- 取派模块 -->
+	<bean id="noticeBillAction" class="cn.it.bos.web.action.qp.NoticeBillAction" scope="prototype"></bean>
+	<bean id="workBillAction" class="cn.it.bos.web.action.qp.WorkBillAction" scope="prototype"></bean>
+	<bean id="workOrderManageAction" class="cn.it.bos.web.action.qp.WorkOrderManageAction" scope="prototype"></bean>
+	
+	
+</beans>

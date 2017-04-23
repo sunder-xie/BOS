@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+    "http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+	<package name="bc" extends="basicstruts2" namespace="/">
+
+		<!-- 基础数据配置 -->
+		<!-- 取派标准 -->
+		<action name="standrad_*" class="standardAction" method="{1}">
+			<result name="standard_save_success">/WEB-INF/pages/base/standard.jsp</result>
+			<result name="standard_pageQuery_success" type="json">
+				<param name="root">pageResponseBean</param>
+				 <param name="excludeProperties">.*hibernateLazyInitializer</param>
+				<param name="includeProperties">
+					<!-- 正则表达式 格式 -->
+					total, <!-- pageResponseBean的 total 属性返回 -->
+					rows\[\d+\]\.id,
+					rows\[\d+\]\.name,
+					rows\[\d+\]\.minweight,
+					rows\[\d+\]\.maxweight,
+					rows\[\d+\]\.updatetime,
+					rows\[\d+\]\.user\.username,
+					rows\[\d+\]\.user\.station
+				</param>
+			</result>
+			<result name="standard_delete_success">/WEB-INF/pages/base/standard.jsp</result>
+			<result name="standard_findStandard_success" type="json">
+			 <param name="excludeProperties">.*hibernateLazyInitializer</param>
+				<param name="root">standardList</param>
+			</result>
+		</action>
+
+		<!-- 取派员信息 -->
+		<action name="staff_*" class="staffAction" method="{1}">
+			<result name="staff_findStandard_success" type="json">
+				<param name="root">staffList</param>
+				 <param name="excludeProperties">.*hibernateLazyInitializer</param>
+			</result>
+			<result name="staff_pageQuery_success" type="json">
+				<param name="root">pageResponseBean</param>
+				 <param name="excludeProperties">.*hibernateLazyInitializer</param>
+				<param name="includeProperties">
+					<!-- 正则表达式 格式 -->
+					total, <!-- pageResponseBean的 total 属性返回 -->
+					rows\[\d+\]\.id,
+					rows\[\d+\]\.name,
+					rows\[\d+\]\.telephone,
+					rows\[\d+\]\.station,
+					rows\[\d+\]\.haspda,
+					rows\[\d+\]\.deltag,
+					rows\[\d+\]\.standard\.id,
+					rows\[\d+\]\.standard\.name,
+					<!-- rows\[\d+\]\.name, rows\[\d+\]\.minweight, rows\[\d+\]\.maxweight, 
+						rows\[\d+\]\.updatetime, -->
+				</param>
+			</result>
+
+			<result name="staff_save_success">/WEB-INF/pages/base/staff.jsp</result>
+			<result name="staff_delete_success">/WEB-INF/pages/base/staff.jsp</result>
+		</action>
+		<!-- 区域设置 -->
+		<action name="region_*" class="regionAction" method="{1}">
+			<result name="region_save_success">/WEB-INF/pages/base/region.jsp</result>
+			<result name="region_importXls_success" type="json">
+			 <param name="excludeProperties">.*hibernateLazyInitializer</param>
+				<param name="root">map</param>
+			</result>
+			<result name="region_exportXLS_success" type="stream">
+				<param name="contentType">application/vnd.ms-excel</param>
+				<param name="contentDisposition">attachment;filename=${downloadFileName}</param>
+			</result>
+			<result name="region_pageQuery_success" type="json">
+				<param name="root">pageResponseBean</param>
+				 <param name="excludeProperties">.*hibernateLazyInitializer</param>
+				<param name="includeProperties">
+					<!-- 正则表达式 格式 -->
+					total, <!-- pageResponseBean的 total 属性返回 -->
+					rows\[\d+\]\.id,
+					rows\[\d+\]\.info,
+					rows\[\d+\]\.province,
+					rows\[\d+\]\.city,
+					rows\[\d+\]\.district,
+					rows\[\d+\]\.postcode,
+					rows\[\d+\]\.shortcode,
+					rows\[\d+\]\.citycode
+				</param>
+			</result>
+			<result name="region_queryRegion_success" type="json">
+				<param name="root">regionList</param>
+			</result>
+			<result name="region_delete_success">/WEB-INF/pages/base/region.jsp</result>
+		</action>
+		<!-- 管理分区 -->
+		<action name="subarea_*" class="subareaAction" method="{1}">
+			<result name="subarea_save_success">/WEB-INF/pages/base/subarea.jsp</result>
+			<result name="subarea_pageQuery_success" type="json">
+			 <param name="excludeProperties">.*hibernateLazyInitializer</param>
+				<param name="root">pageResponseBean</param>
+			</result>
+			<result name="subarea_findStandard_success" type="json">
+				<param name="root">pageResponseBean</param>
+				 <param name="excludeProperties">.*hibernateLazyInitializer</param>
+				<param name="includeProperties">
+					<!-- 正则表达式 格式 -->
+					total, <!-- pageResponseBean的 total 属性返回 -->
+					rows\[\d+\]\.sid,
+					rows\[\d+\]\.addresskey,
+					rows\[\d+\]\.position
+				</param>
+			</result>
+			<result name="subarea_delete_success">/WEB-INF/pages/base/subarea.jsp</result>
+			<result name="subarea_exportXLS_success" type="stream">
+				<param name="contentType">application/vnd.ms-excel</param>
+				<param name="contentDisposition">attachment;filename=${downloadFileName}</param>
+			</result>
+			<result name="subarea_importXls_success" type="json">
+			 <param name="excludeProperties">.*hibernateLazyInitializer</param>
+				<param name="root">map</param>
+				
+			</result>
+		</action>
+
+
+		<!-- 管理管理定区 -->
+		<action name="decidedZone_*" class="decidedZoneAction" method="{1}">
+			<result name="decidedZone_save_success">/WEB-INF/pages/base/decidedzone.jsp</result>
+			<result name="decidedZone_pageQuery_success" type="json">
+				<param name="root">pageResponseBean</param>
+				 <param name="excludeProperties">.*hibernateLazyInitializer</param>
+				<!-- <param name="includeProperties"> 正则表达式 格式 -->
+				<!-- pageResponseBean的 total 属性返回 -->
+				<!-- total, rows\[\d+\]\.id, rows\[\d+\]\.province, rows\[\d+\]\.city, 
+					rows\[\d+\]\.district, rows\[\d+\]\.postcode, rows\[\d+\]\.shortcode, rows\[\d+\]\.citycode 
+					</param> -->
+			</result>
+			<result name="decidedZone_delete_success">/WEB-INF/pages/base/decidedzone.jsp</result>
+			<result name="decidedZone_associationSubarea_success" type="json">
+				<param name="root">subareaList</param>
+				 <param name="excludeProperties">.*hibernateLazyInitializer</param>
+			</result>
+
+			<result name="decidedZone_findNoAssociationCustomer_success"
+				type="json">
+			</result>
+			<result name="decidedZone_findAssociationCustomer_success"
+				type="json">
+			</result>
+			<result name="decidedZone_associateCustomerToDecidedZone_success">
+				/WEB-INF/pages/base/decidedzone.jsp
+			</result>
+		</action>
+		<!-- 基础数据 end -->
+
+	</package>
+</struts>

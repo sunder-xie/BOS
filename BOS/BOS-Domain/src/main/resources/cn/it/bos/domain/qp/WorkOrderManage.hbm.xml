@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2016-12-13 0:42:44 by Hibernate Tools 3.2.2.GA -->
+<hibernate-mapping>
+    <class name="cn.it.bos.domain.qp.WorkOrderManage" table="qp_workordermanage" catalog="bos">
+        <id name="id" type="string">
+            <column name="id" length="32" />
+            <generator class="uuid" />
+        </id>
+        
+        <property name="arrivecity" type="string">
+            <column name="arrivecity" length="20" />
+        </property>
+        <property name="wid" type="string">
+            <column name="wid" length="20" />
+        </property>
+        <property name="product" type="string">
+            <column name="product" length="20" />
+        </property>
+        <property name="num" type="java.lang.Integer">
+            <column name="num" />
+        </property>
+        <property name="weight" type="java.lang.Double">
+            <column name="weight" precision="22" scale="0" />
+        </property>
+        <property name="floadreqr" type="string">
+            <column name="floadreqr" />
+        </property>
+        <property name="prodtimelimit" type="string">
+            <column name="prodtimelimit" length="40" />
+        </property>
+        <property name="prodtype" type="string">
+            <column name="prodtype" length="40" />
+        </property>
+        <property name="sendername" type="string">
+            <column name="sendername" length="20" />
+        </property>
+        <property name="senderphone" type="string">
+            <column name="senderphone" length="20" />
+        </property>
+        <property name="senderaddr" type="string">
+            <column name="senderaddr" length="200" />
+        </property>
+        <property name="receivername" type="string">
+            <column name="receivername" length="20" />
+        </property>
+        <property name="receiverphone" type="string">
+            <column name="receiverphone" length="20" />
+        </property>
+        <property name="receiveraddr" type="string">
+            <column name="receiveraddr" length="200" />
+        </property>
+        <property name="feeitemnum" type="java.lang.Integer">
+            <column name="feeitemnum" />
+        </property>
+        <property name="actlweit" type="java.lang.Double">
+            <column name="actlweit" precision="22" scale="0" />
+        </property>
+        <property name="vol" type="string">
+            <column name="vol" length="20" />
+        </property>
+        <property name="managerCheck" type="string">
+            <column name="managerCheck" length="1" />
+        </property>
+        <property name="updatetime" type="date">
+            <column name="updatetime" length="10" />
+        </property>
+    </class>
+</hibernate-mapping>
