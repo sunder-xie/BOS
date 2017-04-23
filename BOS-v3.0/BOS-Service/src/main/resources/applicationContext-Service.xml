@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context.xsd
+	http://www.springframework.org/schema/aop
+	http://www.springframework.org/schema/aop/spring-aop.xsd
+	http://www.springframework.org/schema/tx 
+	http://www.springframework.org/schema/tx/spring-tx.xsd
+	http://www.springframework.org/schema/data/jpa
+    http://www.springframework.org/schema/data/jpa/spring-jpa.xsd">
+
+	<!-- 注解配置事务 第三步:在Service上使用注解 -->
+	<!-- <tx:annotation-driven transaction-manager="transactionManager"/> -->
+	<!-- 开启注解 -->
+	<context:component-scan base-package="cn.it" />
+	<context:annotation-config />
+	<!-- 事务管理器 -->
+	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+		<property name="entityManagerFactory" ref="entityManagerFactory" />
+	</bean>
+	<!-- 创建流程引擎对象 -->
+	<bean id="processEngineConfiguration" class="org.activiti.spring.SpringProcessEngineConfiguration">
+		<property name="transactionManager" ref="transactionManager"></property>
+		<property name="databaseSchemaUpdate" value="true"></property>
+		<!-- 必须的少不了 -->
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+	<!-- 创建工作流引擎实例 -->
+	<bean id="processEngine" class="org.activiti.spring.ProcessEngineFactoryBean">
+		<property name="processEngineConfiguration" ref="processEngineConfiguration"></property>
+	</bean>
+	
+	
+	<!-- 使用xml方式进行配置 -->
+	<!-- 配置事务通知 -->
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<!-- 增删改方法 -->
+			<tx:method name="add*" isolation="DEFAULT" propagation="REQUIRED"
+				read-only="false" />
+			<tx:method name="edit*" isolation="DEFAULT" propagation="REQUIRED"
+				read-only="false" />
+			<tx:method name="save*" isolation="DEFAULT" propagation="REQUIRED"
+				read-only="false" />
+			<tx:method name="delete*" isolation="DEFAULT" propagation="REQUIRED"
+				read-only="false" />
+			<tx:method name="update*" isolation="DEFAULT" propagation="REQUIRED"
+				read-only="false" />
+
+			<!-- 配置查询方法 --><!-- 问题，read-only设置为true时候，不能利用快照性质来修改数据 -->
+			<tx:method name="get*" isolation="DEFAULT" propagation="REQUIRED"
+				read-only="true" />
+			<tx:method name="find*" isolation="DEFAULT" propagation="REQUIRED"
+				read-only="true" />
+			<tx:method name="list*" isolation="DEFAULT" propagation="REQUIRED"
+				read-only="true" />
+			<tx:method name="page*" isolation="DEFAULT" propagation="REQUIRED"
+				read-only="true" />
+			<tx:method name="ajax*" isolation="DEFAULT" propagation="REQUIRED"
+				read-only="true" />
+			<tx:method name="query*" isolation="DEFAULT" propagation="REQUIRED"
+				read-only="true" />
+		</tx:attributes>
+	</tx:advice>
+
+	<!-- 配置AOP切面 -->
+	<aop:config>
+		<!-- 定义需要通知的切点 -->
+		<aop:pointcut expression="execution(* cn.it.bos.service.impl..*(..))"
+			id="mypointcut" />
+
+		<!-- 定义通知的切面 -->
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="mypointcut" />
+	</aop:config>
+
+</beans>

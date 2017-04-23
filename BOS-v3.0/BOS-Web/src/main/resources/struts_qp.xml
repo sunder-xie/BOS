@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+    "http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+	<package name="qp" extends="basicstruts2" namespace="/">
+		<!-- 取派模块 -->
+		<!-- <action name="noticeBillAction_*" class="noticeBillAction" method="{1}">
+			<result name="noticeBill_saveOrUpdate_success" type="json">
+				<param name="root">map</param>
+			</result>
+			
+			<result name="noticeBill_findAllNoticeBills_success" type="json">
+				<param name="root">pageResponseBean</param>
+				<param name="includeProperties">
+					正则表达式 格式
+					total, pageResponseBean的 total 属性返回
+					rows\[\d+\]\.id,
+					rows\[\d+\]\.workbills\[\d+\]\.type,
+					rows\[\d+\]\.workbills\[\d+\]\.noticebill\.id,
+					rows\[\d+\]\.workbills\[\d+\]\.pickstate,
+					rows\[\d+\]\.workbills\[\d+\]\.buildtime,
+					rows\[\d+\]\.workbills\[\d+\]\.attachbilltimes,
+					rows\[\d+\]\.staff\.telephone,
+					rows\[\d+\]\.staff\.id,
+					rows\[\d+\]\.staff.name,
+				</param>
+			</result>
+		</action> -->
+		<!-- 工作单快速录入 -->
+		<!-- <action name="workOrderManageAction_*" class="workOrderManageAction" method="{1}">
+			<result name="workOrderManageAction_save_success" >
+			/WEB-INF/pages/qupai/quickworkorder.jsp
+			</result>
+			<result name="workOrderManageAction_pageQuery_fail" >
+			/WEB-INF/pages/qupai/quickworkorder.jsp
+			</result>
+			<result name="workOrderManageAction_pageQuery_success" type="json">
+				<param name="root">pageResponseBean</param>
+				<param name="includeProperties">
+					正则表达式 格式
+					total, pageResponseBean的 total 属性返回
+					rows\[\d+\]\.id,
+					rows\[\d+\]\.wid,
+					rows\[\d+\]\.arrivecity,
+					rows\[\d+\]\.product,
+					rows\[\d+\]\.num,
+					rows\[\d+\]\.weight,
+					rows\[\d+\]\.floadreqr
+				</param>
+			</result>
+			
+			
+		</action> -->
+	</package>
+</struts>

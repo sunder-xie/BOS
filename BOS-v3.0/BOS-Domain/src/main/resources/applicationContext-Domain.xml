@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:cache="http://www.springframework.org/schema/cache"
+	xmlns:jaxrs="http://cxf.apache.org/jaxrs"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context.xsd
+	http://www.springframework.org/schema/aop
+	http://www.springframework.org/schema/aop/spring-aop.xsd
+	http://www.springframework.org/schema/tx 
+	http://www.springframework.org/schema/tx/spring-tx.xsd
+	http://www.springframework.org/schema/cache 
+	http://www.springframework.org/schema/cache/spring-cache.xsd
+	http://www.springframework.org/schema/data/jpa
+    http://www.springframework.org/schema/data/jpa/spring-jpa.xsd
+	http://cxf.apache.org/jaxrs
+	http://cxf.apache.org/schemas/jaxrs.xsd">
+
+
+	<!-- 引入配置文件 -->
+	<context:property-placeholder location="classpath:config.properties" />
+	<!-- 开启注解 -->
+	<context:annotation-config />
+	<context:component-scan base-package="cn.it" />
+	<!-- 配置数据源 -->
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+		<property name="driverClass" value="${jdbc.driver}" />
+		<property name="jdbcUrl" value="${jdbc.url}" />
+		<property name="user" value="${jdbc.user}" />
+		<property name="password" value="${jdbc.password}" />
+	</bean>
+
+	<!-- 实体管理器 -->
+	<bean id="entityManagerFactory"
+		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="packagesToScan" value="cn.it.bos.domain" />
+		<property name="jpaVendorAdapter">
+			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+				<property name="database" value="MYSQL " />
+				<property name="generateDdl" value="true" />
+				<property name="showSql" value="true" />
+				<property name="databasePlatform" value="${jdbc.dialect}" />
+				<!-- <property name="hibernate.search.default.indexBase" value="/Users/xieshengrong/home/Workspaces/index"/> -->
+			</bean>
+		</property>
+		<property name="jpaProperties">
+		<props>
+			<prop key="hibernate.search.default.indexBase">/Users/xieshengrong/home/Workspaces/index</prop>
+		</props>
+	</property>
+	</bean>
+	<!-- ehche集成spring -->
+	 <bean id="springCacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">
+         <property name="cacheManager"  ref="ehcacheManager"></property>
+       </bean>
+       <!-- 开启注解 -->
+	<cache:annotation-driven cache-manager="springCacheManager"/>
+	
+	<!-- 配置缓存 -->
+	<bean id="ehcacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+           <property name="configLocation" value="classpath:ehcache.xml"></property>
+       </bean>
+	
+	
+	<jpa:repositories base-package="cn.it.bos.dao"
+		entity-manager-factory-ref="entityManagerFactory"
+		transaction-manager-ref="transactionManager"></jpa:repositories>
+
+</beans>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context.xsd
+	http://www.springframework.org/schema/aop
+	http://www.springframework.org/schema/aop/spring-aop.xsd
+	http://www.springframework.org/schema/tx 
+	http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+
+
+
+   <!-- shiro 权限控制 -->
+	<bean id="shiroSecurityFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+		<!-- shiro 的核心安全接口 -->
+		<property name="securityManager" ref="securityManager" />
+		<!-- 要求登录时的链接 -->
+		<property name="loginUrl" value="/login.jsp" />
+		<!-- 登陆成功后要跳转的连接 -->
+		<property name="successUrl" value="/index.jsp" />
+		<!-- 权限不足，跳转路径  -->
+		<property name="unauthorizedUrl" value="/unauthorized.jsp" />
+		<!-- shiro 连接约束配置 -->
+		<!-- URL控制规则  路径=规则 -->
+		<property name="filterChainDefinitions">
+			<value>
+				/css/** = anon
+				/demo/** = anon
+				/images/** = anon
+				/js/** = anon
+				/json/** = anon
+				/login.jsp** = anon
+				/index.jsp** = authc
+				/validatecode.jsp** = anon
+				/loginAction_login** = anon
+				/loginAction_logout** = anon
+				/login_ajaxChecked** = anon
+			<!--/page_qupai_noticebill_add** =roles[base]-->
+				/page_base_staff** =roles[base]  
+				/** = authc
+			</value>
+		</property>
+	</bean>
+	
+	
+	 <bean id="shiroCacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
+         <property name="cacheManager" ref="ehcacheManager"></property>
+       </bean>	
+    <bean id="userRealm" class="cn.it.bos.shiro.realm.UserRealm">
+        <property name="authorizationCacheName" value="base"></property>
+   </bean>
+       
+	
+	<!-- 安全管理器 -->
+	<bean id="securityManager" 
+		class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+		<!-- 在安全管理器，应该注入 Realm 连接安全数据  -->
+		<property name="realm" ref="userRealm"></property>
+		 <property name="cacheManager" ref="shiroCacheManager"></property>
+	</bean>
+<!--开启注解的权限控制  -->
+	<!-- spring bean 对象后处理器  -->
+	<bean id="lifecycleBeanPostProcessor"
+		class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
+	<!-- 切面自动代理 -->
+	<bean
+	class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" 
+		depends-on="lifecycleBeanPostProcessor">
+		<property name="proxyTargetClass" value="true"></property>
+		</bean>
+	<!-- 使用类做代理 -->
+	<aop:config proxy-target-class="true"></aop:config>
+	
+	<!-- 切面 -->
+	<bean
+		class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+		 <property name="securityManager" ref="securityManager"/>
+	</bean>	
+
+</beans>
